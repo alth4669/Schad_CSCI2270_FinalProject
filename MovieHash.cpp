@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <stdlib.h>
+#include <vector>
 
 MovieHash::MovieHash()
 {
@@ -27,9 +28,6 @@ void MovieHash::insertMovie(std::string title, int startTime, int endTime, int i
     node->endTime=endTime;
     node->next=NULL;
     node->previous=NULL;
-    //tmp->next=NULL;
-    //int sum=hashSum(title, s);
-    //cout<<"hi"<<endl;
     if(hashTable[index]==NULL){
         hashTable[index]=node;
     }
@@ -94,7 +92,6 @@ void MovieHash::doubleFeature(std::string input1, std::string input2){
             tmp=hashTable[x];
             while(tmp!=NULL){
                 if(tmp->title==input1){
-                    //cout<<input1<<": from "<<tmp->startTime<<" to "<<tmp->endTime<<endl;
                     bool SoE=true;
                     addTime(z,tmp->startTime,tmp->endTime,SoE);
                     tmp=tmp->next;
@@ -137,12 +134,6 @@ void MovieHash::doubleFeature(std::string input1, std::string input2){
       }
     }
 
-    /*for(int y=0;y<6;y++){
-        cout<<movieOne[y]<<endl;
-    }
-    for(int y=0;y<6;y++){
-        cout<<movieTwo[y]<<endl;
-    }*/
 }
 
 bool MovieHash::timeCompare(int compareOne, int compareTwo, int compareThree, int compareFour){
@@ -254,68 +245,7 @@ void MovieHash::randomDoubleFeature(std::string input1, std::string input2){
       }
 }
 
-/*void MovieHash::soonestScreening(int time){
-    int i;
-    int diffStorage1;
-    string movieStorage1;
-    int timeStorage1;
-    int diffStorage2;
-    string movieStorage2;
-    int timeStorage2;
-    int diffStorage3;
-    string movieStorage3;
-    int timeStorage3;
 
-    HashElem *tmp=new HashElem;
-    tmp=hashTable[0];
-    diffStorage2=tmp->startTime-time;
-    timeStorage2=tmp->startTime;
-    movieStorage2=tmp->title;
-    //cout<<diffStorage2<<" "<<timeStorage2<<" "<<movieStorage2<<endl;
-    if(diffStorage2>2400){
-            diffStorage2=time+(2400-tmp->startTime);
-    }
-    for(int x=0; x<5;x++){
-        if(hashTable[x]!=NULL){
-            while(tmp!=NULL){
-                diffStorage1=tmp->startTime+time;
-                if(diffStorage1>2400){
-                    //diffStorage1=tmp->startTime-(2400-time);
-                    diffStorage1=time+(2400-tmp->startTime);
-                }
-                movieStorage1=tmp->title;
-                timeStorage1=tmp->startTime;
-                if(diffStorage1==diffStorage2){
-                    diffStorage3=diffStorage2;
-                    movieStorage3=movieStorage2;
-                    timeStorage3=timeStorage2;
-                    diffStorage2=diffStorage1;
-                    movieStorage2=movieStorage1;
-                    timeStorage2=timeStorage1;
-                }
-                if(diffStorage1<diffStorage2){
-                    diffStorage2=diffStorage1;
-                    movieStorage2=movieStorage1;
-                    timeStorage2=timeStorage1;
-                }
-                //cout<<tmp->title<<" is showing at "<<tmp->startTime<<", in "<<diffStorage1<<" minute(s)."<<endl;
-                tmp=tmp->next;
-            }
-        }
-    }
-    if(diffStorage2==diffStorage3){
-        if(movieStorage3==movieStorage2){
-            cout<<movieStorage2<<" is showing at "<<timeStorage2<<"."<<endl;
-        }
-        else{
-            cout<<movieStorage2<<" is showing at "<<timeStorage2<<"."<<endl;
-            cout<<movieStorage3<<" is showing at "<<timeStorage3<<"."<<endl;
-        }
-    }
-    else{
-        cout<<movieStorage2<<" is showing at "<<timeStorage2<<"."<<endl;
-    }
-}*/
 
 void MovieHash::atThisTime(int time){
     int i;
@@ -331,4 +261,45 @@ void MovieHash::atThisTime(int time){
             }
         }
     }
+}
+
+void MovieHash::enterConflict(string desc, int startTime, int endTime)
+{
+    conflict newConflict = conflict(desc, startTime, endTime);
+    conflictList.push_back(newConflict);
+}
+
+void MovieHash::listConflicts()
+{
+    cout << "======Current Conflicts======" << endl;
+    if (conflictList.size() == 0)
+    {
+        cout << "You currently have no conflicts listed." << endl;
+    }
+    else
+    {
+        for (int i=0; i<conflictList.size(); i++)
+        {
+            cout << "Starting time: " << conflictList[i].startTime << endl;
+            cout << "Ending time: " << conflictList[i].endTime << endl;
+            cout << "Description: " << conflictList[i].description << endl;
+            cout << endl;
+        }
+    }
+}
+
+bool MovieHash::conflictCheck(HashElem* movie)
+{
+    for (int i=0; i<conflictList.size(); i++)
+    {
+        if (movie->startTime >= conflictList[i].startTime || movie->startTime <= conflictList[i].endTime)
+        {
+            return false;
+        }
+        else if (movie->endTime >= conflictList[i].startTime || movie->startTime <= conflictList[i].endTime)
+        {
+            return false;
+        }
+    }
+    return true;
 }

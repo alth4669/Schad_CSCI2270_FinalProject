@@ -5,8 +5,24 @@
 #include <sstream>
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 using namespace std;
+
+struct conflict
+{
+    string description;
+    int startTime;
+    int endTime;
+
+    conflict(){};
+    conflict(string init_desc, int init_start, int init_end)
+    {
+        description = init_desc;
+        startTime = init_start;
+        endTime = init_end;
+    }
+};
 
 struct HashElem{
 	std::string title;
@@ -38,17 +54,20 @@ class MovieHash
         void doubleFeature(std::string inputString1, std::string inputString2);
         void addTime(int z, int startTime, int endTime, bool SoE);
         bool timeCompare(int compareOne, int compareTwo, int compareThree, int compareFour);
-        void soonestScreening(int time); //unused
         void randomMovie();
         void randomDouble();
         void randomDoubleFeature(std::string inputString1, std::string inputString2);
         void atThisTime(int time);
+        void enterConflict(string desc, int startTime, int endTime);
+        void listConflicts();
     protected:
     private:
         int s = 5;
         int movieOne[6];
         int movieTwo[6];
         HashElem* hashTable[5];
+        vector <conflict> conflictList;
+        bool conflictCheck(HashElem* movie);
 };
 
 #endif // MOVIEHASH_H
