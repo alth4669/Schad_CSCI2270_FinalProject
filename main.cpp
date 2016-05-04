@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
 {
     string line; //to stringstream
     int cat=0; //to organize times and days
-    //int indexFinder=0; //to add movies to each index
     string temp; //for getline
     string title; //first category for parsing
     int startTime; //second category, when a movie begins
@@ -44,6 +43,8 @@ int main(int argc, char* argv[])
     MovieHash h;
     string inputString1;
     string inputString2;
+    int conflictStart, conflictEnd;
+    string conflictDescription;
 
     ifstream inFile;
     inFile.open("movies.txt");
@@ -54,8 +55,6 @@ int main(int argc, char* argv[])
                     if(index!=5){
                     if(cat==0){
                         title=temp;v //parses out only the first on each like to create a hash table
-                        //cout<<hashTable[indexFinder].title<<endl;
-                        //indexFinder++;
                         cat++;
                     }
                     else if(cat==1){ //adds starting times
@@ -98,7 +97,9 @@ int main(int argc, char* argv[])
             cout<<"4. Check which movies begin at a certain time"<<endl;
             cout<<"5. Pick random movie (with random time)"<<endl;
             cout<<"6. Pick random double feature"<<endl;
-            cout<<"7. Quit"<<endl;
+            cout<<"7. Enter a schedule conflict"<<endl;
+            cout<<"8. List schedule conflicts"<<endl;
+            cout<<"9. Quit"<<endl;
             getline(cin,menuPick);
             if(menuPick=="1"){ //Prints the hash table
                 h.printTableContents();
@@ -127,7 +128,21 @@ int main(int argc, char* argv[])
             else if(menuPick=="6"){ //Just like above, but makes sure that the movies don't conflict and creates a back-to-back experience
                 h.randomDouble();
             }
-            else if(menuPick=="7"){ //Quit
+            else if(menuPick=="7"){ //Enter a conflict's start and end time along with a description. It will be stored in the conflict list of the hash table.
+                cout << "Enter a conflict start time (using military time):" << endl;
+                cin >> conflictStart;
+                cout << "Enter when this conflict will be finished:" << endl;
+                cin >> conflictEnd;
+                cout << "Enter a description of this conflict:" << endl;
+                cin.ignore();
+                getline(cin,conflictDescription);
+                cout << conflictDescription << endl;
+                h.enterConflict(conflictDescription, conflictStart, conflictEnd);
+            }
+            else if(menuPick=="8"){ // lists all conflicts the user has entered including their times and descriptions
+                h.listConflicts();
+            }
+            else if(menuPick=="9"){ //Quit
                 cout<<"Goodbye!"<<endl;
                 noQuit=false;
             }
